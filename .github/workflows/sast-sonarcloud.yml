@@ -9,26 +9,26 @@ jobs:
   sonarcloud:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "16" 
 
-      - name: Cache dependencies
+      - name: 📦 Cache Node Modules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install dependencies
+      - name: 💾 Install dependencies
         run: npm install
-
-      - name: Run SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          organization: ${{ secrets.SONAR_ORG }}
-          projectKey: ${{ secrets.SONAR_PROJECT }}
-          token: ${{ secrets.SONAR_TOKEN }}
+        
+      - name: 🔎 Run SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
